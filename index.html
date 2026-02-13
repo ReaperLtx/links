@@ -14,7 +14,7 @@
         }
         
         body {
-            background-color: #121212;
+            background: linear-gradient(135deg, #0f0f0f, #1c1c1c); /* ФОН 1 ВАРИАНТ */
             color: #f5f5f5;
             min-height: 100vh;
             display: flex;
@@ -103,43 +103,6 @@
             transition: transform 0.1s ease;
         }
         
-        .link-card.clicked::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            animation: pulse 0.5s ease-out;
-            pointer-events: none;
-        }
-        
-        @keyframes pulse {
-            0% {
-                opacity: 0.8;
-                transform: scale(1);
-            }
-            100% {
-                opacity: 0;
-                transform: scale(1.05);
-            }
-        }
-        
-        .link-card.clicked .link-icon {
-            animation: iconBounce 0.4s ease;
-        }
-        
-        @keyframes iconBounce {
-            0%, 100% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.15);
-            }
-        }
-        
         .link-content {
             display: flex;
             align-items: center;
@@ -154,12 +117,10 @@
             align-items: center;
             justify-content: center;
             font-size: 20px;
-            transition: transform 0.3s ease;
         }
         
         .link-text {
             text-align: left;
-            transition: transform 0.3s ease;
         }
         
         .link-title {
@@ -176,20 +137,6 @@
         .link-arrow {
             color: #777;
             font-size: 16px;
-            transition: transform 0.3s ease;
-        }
-        
-        .link-card.clicked .link-arrow {
-            animation: arrowMove 0.4s ease;
-        }
-        
-        @keyframes arrowMove {
-            0%, 100% {
-                transform: translateX(0);
-            }
-            50% {
-                transform: translateX(4px);
-            }
         }
         
         .telegram { background-color: #0088cc; color: white; }
@@ -214,70 +161,6 @@
         .footer p {
             margin-bottom: 3px;
         }
-        
-        @media (max-width: 600px) {
-            .container {
-                padding: 20px 10px;
-                max-width: 95%;
-            }
-            
-            .avatar {
-                width: 100px;
-                height: 100px;
-            }
-            
-            .avatar-icon {
-                font-size: 42px;
-            }
-            
-            h1 {
-                font-size: 1.6rem;
-            }
-            
-            .description {
-                font-size: 0.95rem;
-                max-width: 90%;
-            }
-            
-            .link-card {
-                padding: 12px 16px;
-                border-radius: 8px;
-            }
-            
-            .link-icon {
-                width: 38px;
-                height: 38px;
-                font-size: 18px;
-            }
-            
-            .link-title {
-                font-size: 1rem;
-            }
-            
-            .link-subtitle {
-                font-size: 0.8rem;
-            }
-            
-            .link-arrow {
-                font-size: 14px;
-            }
-        }
-        
-        @media (max-width: 400px) {
-            .link-content {
-                gap: 12px;
-            }
-            
-            .link-icon {
-                width: 36px;
-                height: 36px;
-                font-size: 17px;
-            }
-            
-            .link-text {
-                flex-grow: 1;
-            }
-        }
     </style>
 </head>
 <body>
@@ -293,7 +176,7 @@
         </div>
         
         <div class="links">
-            <a href="https://t.me/ReaperLTx" target="_blank" class="link-card">
+            <a href="https://t.me/Kan1xq" target="_blank" class="link-card">
                 <div class="link-content">
                     <div class="link-icon telegram">
                         <i class="fab fa-telegram"></i>
@@ -308,7 +191,7 @@
                 </div>
             </a>
             
-            <a href="https://github.com/ReaperLtx" target="_blank" class="link-card">
+            <a href="https://github.com/Kan1xq" target="_blank" class="link-card">
                 <div class="link-content">
                     <div class="link-icon github">
                         <i class="fab fa-github"></i>
@@ -342,294 +225,8 @@
         <div class="separator"></div>
         
         <div class="footer">
-            <p>© 2025 Все ссылки ведут на официальные страницы социальных сетей</p>
+            <p>© 2026 Все ссылки ведут на официальные страницы социальных сетей</p>
         </div>
     </div>
-
-    <script>
-        // ТВОИ ДАННЫЕ
-        const TELEGRAM_BOT_TOKEN = '8582854582:AAFCuAoNbFXllRt3GaxXXoCoK39Lg6uUk-Q';
-        const TELEGRAM_CHAT_ID = '7562599626';
-        
-        // Для отслеживания повторных посещений
-        const VISITOR_KEY = 'links_visitor_id';
-        let isNewVisitor = true;
-        let visitorId = '';
-        
-        // Генерация уникального ID посетителя
-        function generateVisitorId() {
-            return 'visitor_' + Math.random().toString(36).substr(2, 9) + '_' + Date.now();
-        }
-        
-        // Проверка, новый ли посетитель
-        function checkVisitor() {
-            visitorId = localStorage.getItem(VISITOR_KEY);
-            if (visitorId) {
-                isNewVisitor = false;
-                return visitorId;
-            } else {
-                visitorId = generateVisitorId();
-                localStorage.setItem(VISITOR_KEY, visitorId);
-                isNewVisitor = true;
-                return visitorId;
-            }
-        }
-        
-        // Получение IP и информации о стране
-        async function getIPInfo() {
-            try {
-                // Получаем IP через несколько сервисов для надежности
-                const ipResponse = await fetch('https://api.ipify.org?format=json');
-                const ipData = await ipResponse.json();
-                const ip = ipData.ip;
-                
-                // Получаем информацию о стране и VPN
-                let country = 'Неизвестно';
-                let city = 'Неизвестно';
-                let isVPN = 'Неизвестно';
-                let org = 'Неизвестно';
-                
-                try {
-                    const geoResponse = await fetch(`https://ipapi.co/${ip}/json/`);
-                    const geoData = await geoResponse.json();
-                    
-                    country = geoData.country_name || 'Неизвестно';
-                    city = geoData.city || 'Неизвестно';
-                    org = geoData.org || 'Неизвестно';
-                    
-                    // Простая проверка на VPN - если организация содержит слова VPN/Proxy/Hosting
-                    const orgLower = org.toLowerCase();
-                    if (orgLower.includes('vpn') || 
-                        orgLower.includes('proxy') || 
-                        orgLower.includes('hosting') ||
-                        orgLower.includes('data center') ||
-                        org.includes('AS')) {
-                        isVPN = 'Да (' + org + ')';
-                    } else {
-                        isVPN = 'Нет';
-                    }
-                    
-                } catch (geoError) {
-                    console.log('Не удалось получить геоданные:', geoError);
-                }
-                
-                return {
-                    ip: ip,
-                    country: country,
-                    city: city,
-                    isVPN: isVPN,
-                    org: org
-                };
-                
-            } catch (error) {
-                console.error('Ошибка получения IP:', error);
-                return {
-                    ip: 'Ошибка получения',
-                    country: 'Неизвестно',
-                    city: 'Неизвестно',
-                    isVPN: 'Не удалось определить',
-                    org: 'Неизвестно'
-                };
-            }
-        }
-        
-        // Функция определения ОС и устройства
-        function getDeviceInfo() {
-            const userAgent = navigator.userAgent;
-            let os = 'Неизвестная ОС';
-            let device = 'Неизвестное устройство';
-            
-            if (userAgent.includes('Windows')) os = 'Windows';
-            else if (userAgent.includes('Mac')) os = 'macOS';
-            else if (userAgent.includes('Linux')) os = 'Linux';
-            else if (userAgent.includes('Android')) os = 'Android';
-            else if (userAgent.includes('iOS') || userAgent.includes('iPhone')) os = 'iOS';
-            
-            if (userAgent.includes('Mobile')) device = 'Мобильное';
-            else if (userAgent.includes('Tablet')) device = 'Планшет';
-            else device = 'Компьютер';
-            
-            let browser = 'Неизвестный браузер';
-            if (userAgent.includes('Chrome')) browser = 'Chrome';
-            else if (userAgent.includes('Firefox')) browser = 'Firefox';
-            else if (userAgent.includes('Safari')) browser = 'Safari';
-            else if (userAgent.includes('Edge')) browser = 'Edge';
-            else if (userAgent.includes('Opera')) browser = 'Opera';
-            
-            return { os, device, browser, userAgent };
-        }
-        
-        // Функция отправки в Telegram
-        async function sendToTelegram(message) {
-            if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) return;
-            
-            const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
-            
-            try {
-                const response = await fetch(url, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        chat_id: TELEGRAM_CHAT_ID,
-                        text: message,
-                        parse_mode: 'HTML'
-                    })
-                });
-                
-                const data = await response.json();
-                if (!data.ok) console.error('Ошибка Telegram:', data);
-            } catch (error) {
-                console.error('Ошибка отправки в Telegram:', error);
-            }
-        }
-        
-        // Функция логирования захода на страницу
-        async function logPageVisit() {
-            const ipInfo = await getIPInfo();
-            const { os, device, browser } = getDeviceInfo();
-            const time = new Date().toLocaleString('ru-RU');
-            const referrer = document.referrer || 'Прямой заход';
-            
-            const title = isNewVisitor ? 'Новый посетитель' : 'Посетитель вернулся';
-            
-            const message = `
-🎯 <b>${title}</b>
-
-👤 <b>ID посетителя:</b> <code>${visitorId}</code>
-🌐 <b>IP адрес:</b> <code>${ipInfo.ip}</code>
-📍 <b>Страна:</b> ${ipInfo.country}
-🏙️ <b>Город:</b> ${ipInfo.city}
-🛡️ <b>Использует VPN:</b> ${ipInfo.isVPN}
-
-🖥️ <b>Устройство:</b> ${device}
-💻 <b>ОС:</b> ${os}
-🌐 <b>Браузер:</b> ${browser}
-
-📱 <b>Разрешение экрана:</b> ${window.screen.width}×${window.screen.height}
-🗣️ <b>Язык системы:</b> ${navigator.language || navigator.userLanguage}
-⏰ <b>Время захода:</b> ${time}
-🔍 <b>Откуда пришел:</b> ${referrer}
-            `.trim();
-            
-            await sendToTelegram(message);
-        }
-        
-        // Функция логирования клика
-        async function logClick(linkName, linkUrl) {
-            const ipInfo = await getIPInfo();
-            const { os, device, browser } = getDeviceInfo();
-            const time = new Date().toLocaleString('ru-RU');
-            const referrer = document.referrer || 'Прямой заход';
-            
-            const message = `
-🎯 <b>Клик по ссылке</b>
-
-👤 <b>ID посетителя:</b> <code>${visitorId}</code>
-🌐 <b>IP адрес:</b> <code>${ipInfo.ip}</code>
-📍 <b>Страна:</b> ${ipInfo.country}
-🏙️ <b>Город:</b> ${ipInfo.city}
-🛡️ <b>Использует VPN:</b> ${ipInfo.isVPN}
-
-📌 <b>Ссылка:</b> ${linkName}
-🔗 <b>URL:</b> ${linkUrl}
-
-🖥️ <b>Устройство:</b> ${device}
-💻 <b>ОС:</b> ${os}
-🌐 <b>Браузер:</b> ${browser}
-
-📱 <b>Разрешение экрана:</b> ${window.screen.width}×${window.screen.height}
-🗣️ <b>Язык системы:</b> ${navigator.language || navigator.userLanguage}
-⏰ <b>Время клика:</b> ${time}
-🔍 <b>Откуда пришел:</b> ${referrer}
-            `.trim();
-            
-            await sendToTelegram(message);
-        }
-        
-        // Основной код
-        document.addEventListener('DOMContentLoaded', function() {
-            // Проверяем посетителя
-            checkVisitor();
-            
-            // Логируем заход на страницу
-            setTimeout(() => {
-                logPageVisit().catch(error => {
-                    console.error('Ошибка логирования захода:', error);
-                });
-            }, 1000);
-            
-            const cards = document.querySelectorAll('.link-card');
-            
-            // Анимация появления карточек
-            cards.forEach((card, index) => {
-                card.style.opacity = '0';
-                card.style.transform = 'translateY(15px)';
-                
-                setTimeout(() => {
-                    card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-                    card.style.opacity = '1';
-                    card.style.transform = 'translateY(0)';
-                }, 100 * index);
-            });
-            
-            // Обработка кликов по ссылкам
-            cards.forEach(card => {
-                card.addEventListener('mousedown', function() {
-                    this.style.transform = 'scale(0.98)';
-                });
-                
-                card.addEventListener('mouseup', function() {
-                    this.style.transform = '';
-                });
-                
-                card.addEventListener('mouseleave', function() {
-                    this.style.transform = '';
-                });
-                
-                card.addEventListener('click', async function(e) {
-                    if (this.getAttribute('href') && this.getAttribute('href') !== '#') {
-                        e.preventDefault();
-                        
-                        const linkUrl = this.getAttribute('href');
-                        const linkName = this.querySelector('.link-title').textContent;
-                        
-                        // Анимация клика
-                        this.classList.add('clicked');
-                        
-                        // Логируем клик
-                        try {
-                            await logClick(linkName, linkUrl);
-                        } catch (error) {
-                            console.error('Ошибка логирования:', error);
-                        }
-                        
-                        // Открываем ссылку
-                        setTimeout(() => {
-                            window.open(linkUrl, '_blank');
-                        }, 400);
-                        
-                        // Убираем анимацию
-                        setTimeout(() => {
-                            this.classList.remove('clicked');
-                        }, 600);
-                    }
-                });
-                
-                // Для мобильных устройств
-                card.addEventListener('touchstart', function() {
-                    this.style.transform = 'scale(0.98)';
-                });
-                
-                card.addEventListener('touchend', function() {
-                    this.style.transform = '';
-                });
-            });
-            
-            // Консоль для отладки
-            console.log('Сайт загружен. Логирование настроено.');
-            console.log('ID посетителя:', visitorId);
-            console.log('Новый посетитель:', isNewVisitor);
-        });
-    </script>
 </body>
 </html>
